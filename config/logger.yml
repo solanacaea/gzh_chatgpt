@@ -1,0 +1,57 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+    simple:
+        format: "%(asctime)s - %(filename)s -%(name)s -%(levelname)s - %(message)s"
+    consolefmt:
+        format: "%(name)s -%(levelname)s - %(message)s"
+    tracefmt:
+        format: "%(message)s"
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: simple
+        stream: ext://sys.stdout
+    outloggerfile:
+        class: logging.handlers.TimedRotatingFileHandler
+        level: INFO
+        formatter: simple
+        filename: /root/logs/gzh/out.log
+        backupCount: 10
+        encoding: utf8
+        interval: 1
+        when: D
+    traceloggerfile:
+        class: logging.handlers.TimedRotatingFileHandler
+        level: INFO
+        formatter: simple
+        filename: /root/logs/gzh/trace.log
+        backupCount: 10
+        encoding: utf8
+        interval: 1
+        when: D
+    errorloggerfile:
+        class: logging.handlers.TimedRotatingFileHandler
+        level: INFO
+        formatter: simple
+        filename: /root/logs/gzh/error.log
+        backupCount: 10
+        encoding: utf8
+        interval: 1
+        when: D
+loggers:
+    tracelogger:
+        level: INFO
+        handlers: [traceloggerfile]
+        propagate: no
+    errorlogger:
+        level: WARNING
+        handlers: [console, errorloggerfile]
+        # 打开日志记录器
+        propagate: False
+
+root:
+    level: DEBUG
+    handlers: [console, outloggerfile]

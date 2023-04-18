@@ -1,0 +1,12 @@
+server_port: 8000
+openai_api_key: sk-
+openai_gpt35_url: https://api.openai.com/v1/chat/completions
+wx_jszaz_app_id: 公众号app_id
+wx_jszaz_app_secret: 公众号app_secret
+wx_jszaz_encoding_aes_key: 公众号aes_key
+wx_jszaz_tk: 公众号token
+wx_url_msg: https://api.weixin.qq.com/cgi-bin/message/custom/send?
+wx_url_token: https://api.weixin.qq.com/cgi-bin/token?
+mysql_url: localhost
+mysql_user: 123
+mysql_pwd: 123

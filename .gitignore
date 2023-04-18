@@ -1,0 +1,5 @@
+
+.DS_Store
+*.cpython-39.pyc
+venv
+.idea
