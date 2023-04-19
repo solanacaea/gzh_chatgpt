@@ -32,7 +32,8 @@ async def ask_gpt35_by_url(content, device_id):
     param = {
         "model": "gpt-3.5-turbo",
         "messages": [{"role": "user", "content": content}],
-        "user": device_id
+        "user": device_id,
+        "max_token": 100
     }
     header = {
         'Authorization': 'Bearer ' + openai_api_key,
@@ -48,9 +49,11 @@ async def ask_gpt35_by_sdk(content, device_id):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": content}],
-        user=device_id
+        user=device_id,
+        max_token=100
     )
     resp_text = completion['choices'][0]["message"]["content"].strip()
+    trace_logger.info(f"q: {content}\n{completion}")
     return resp_text
 
 

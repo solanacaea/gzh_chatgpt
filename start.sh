@@ -37,7 +37,10 @@ stop() {
 is_exist
 if [ $? -eq "0" ]
 then
- kill -9 $pid
+ for single_pid in $pid
+ do
+  kill -9 $single_pid
+ done
  cur_dateTime="`date +%Y-%m-%d,%H:%m:%s`"
  mv $LOG_FOLDER/gzh.log $LOG_FOLDER/gzh.log_$cur_dateTime
 else

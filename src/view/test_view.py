@@ -1,12 +1,13 @@
 from functools import wraps
 from sanic import Blueprint
 from sanic.response import text
+from wx.gzh_service import send_to_user
 import xmltodict
 import time
 from utils.logger import get_out_logger, TraceLogger
 
 logger = get_out_logger()
-bp_test = Blueprint("test")
+bp_test = Blueprint("test", url_prefix="gzh")
 file_name = "test"
 
 
@@ -56,3 +57,9 @@ async def wx1(request):
 
     return text(xmltodict.unparse(resp_dict))
 
+
+@bp_test.route('/sent', methods=["GET", "POST"])
+@trace_log("sent")
+async def test(request):
+    q = request.json.get("question")
+    await send_to_user("wxid", q)

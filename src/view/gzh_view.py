@@ -5,7 +5,7 @@ from functools import wraps
 from utils.logger import TraceLogger
 
 
-bp_gzh = Blueprint("gzh")
+bp_gzh = Blueprint("gzh", url_prefix="gzh")
 file_name = "gzh"
 
 
