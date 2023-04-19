@@ -2,6 +2,7 @@
 
 APP_NAME=GZHPY
 LOG_FOLDER=/root/logs/gzh
+source wxenv/bin/activate
 
 usage() {
 echo "Usage: sh start.sh [start|stop|restart|status]"
