@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP_NAME=GZHPY
-LOG_FOLDER=/root/logs
+LOG_FOLDER=/root/logs/gzh
 
 usage() {
 echo "Usage: sh start.sh [start|stop|restart|status]"
