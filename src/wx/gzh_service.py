@@ -8,6 +8,7 @@ RESPONSE_EMPTY = "EMPTY"
 RESPONSE_ECHO = "ECHO"
 RESPONSE_NEXT = "NEXT"
 RESPONSE_RESULT = "RESULT"
+RESPONSE_TIMEOUT = "TIMEOUT"
 
 RESPONSE_TYPE_PUSH = "push"
 RESPONSE_TYPE_NO_PUSH = "no_push"
@@ -56,13 +57,16 @@ class GzhService:
             cache_curr_user_msg = cache_curr_user[msg_id]
             cache_curr_user_msg["count"] += 1
         else:
-            cache_curr_user_msg = {"count": 1}
+            cache_curr_user[msg_id] = {"count": 1}
+            cache_curr_user_msg = cache_curr_user[msg_id]
 
         if "result" in cache_curr_user_msg:
             resp = cache_curr_user_msg["result"]
             del cache_curr_user[msg_id]
-            logger.info(f"从缓存取得请求结果, msg_id={msg_id}")
+            logger.info(f"从缓存取得请求结果, msg_id={msg_id}, resp={resp}")
             return RESPONSE_RESULT, resp, None
+        elif cache_curr_user_msg["count"] > 3:
+            return RESPONSE_TIMEOUT, "请求超时，请稍后再试。", None
         elif cache_curr_user_msg["count"] > 1:
             return RESPONSE_EMPTY, "", None
         else:
@@ -78,7 +82,7 @@ class GzhService:
         valid, resp, doc = await self._pre_check(request)
         if valid == RESPONSE_EMPTY or valid == RESPONSE_ECHO:
             return resp
-        if valid == RESPONSE_RESULT:
+        if valid == RESPONSE_RESULT or valid == RESPONSE_TIMEOUT:
             resp_dict = await self._consolidate_resp(doc, resp)
             return xmltodict.unparse(resp_dict)
 
@@ -95,7 +99,7 @@ class GzhService:
             return xmltodict.unparse(resp_dict)
 
         timestamp = request.args.get("timestamp")
-        if time.time() - timestamp > 15:
+        if time.time() - timestamp > 15000:
             logger.info(f"请求超时啦，删除缓存, msg_id={msg_id}, msg={msg}")
             if response_type == RESPONSE_TYPE_PUSH:
                 await send_to_user(to_user, resp_text)

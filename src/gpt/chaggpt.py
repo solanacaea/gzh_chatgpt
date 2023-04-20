@@ -7,6 +7,7 @@ logger = get_out_logger()
 trace_logger = get_trace_logger()
 openai.api_key = get_conf("openai_api_key")
 max_tokens = 200
+REQUEST_MSG_APPEND = "，请返回最多280个字符。"
 
 
 async def ask_davinci(content, device_id):
@@ -49,7 +50,7 @@ async def ask_gpt35_by_url(content, device_id):
 async def ask_gpt35_by_sdk(content, device_id):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": content}],
+        messages=[{"role": "user", "content": content + REQUEST_MSG_APPEND}],
         user=device_id,
         max_tokens=max_tokens
     )
