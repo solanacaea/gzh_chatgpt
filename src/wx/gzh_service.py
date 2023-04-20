@@ -99,15 +99,17 @@ class GzhService:
             return xmltodict.unparse(resp_dict)
 
         timestamp = request.args.get("timestamp")
-        logger.info(f"执行时间, start={timestamp}, end={time.time()}, msg_id={msg_id}, msg={msg}")
-        if time.time() - float(timestamp) > 15000:
+        gap_time = time.time() - float(timestamp)
+        logger.info(f"执行时间, start={timestamp}, end={time.time()}, gap={gap_time}, msg_id={msg_id}, msg={msg}")
+        if gap_time > 15:
             logger.info(f"请求超时啦，删除缓存, msg_id={msg_id}, msg={msg}")
             if response_type == RESPONSE_TYPE_PUSH:
                 await send_to_user(to_user, resp_text)
-            del self.user_ask[from_user][msg_id]
+                del self.user_ask[from_user][msg_id]
         else:
             self.user_ask[from_user][msg_id]["result"] = resp_text
             logger.info(f"从缓存取结果, msg_id={msg_id}, msg={msg}")
+            del self.user_ask[from_user][msg_id]
             return xmltodict.unparse(resp_dict)
 
     @staticmethod
