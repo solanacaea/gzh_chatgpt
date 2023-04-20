@@ -64,7 +64,7 @@ class GzhService:
             resp = cache_curr_user_msg["result"]
             del cache_curr_user[msg_id]
             logger.info(f"从缓存取得请求结果, msg_id={msg_id}, resp={resp}")
-            return RESPONSE_RESULT, resp, None
+            return RESPONSE_RESULT, resp, self.doc
         elif cache_curr_user_msg["count"] > 3:
             return RESPONSE_TIMEOUT, "请求超时，请稍后再试。", None
         elif cache_curr_user_msg["count"] > 1:
