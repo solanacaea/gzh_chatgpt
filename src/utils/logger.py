@@ -29,12 +29,13 @@ def get_out_logger():
 
 
 class TraceLogger:
-    def __init__(self, name, request):
+    def __init__(self, name, request, doc):
         self.name = name
         self.req = request
         self.start_time = 0
         self.end_time = 0
         self.gap = 0
+        self.doc = doc
 
     def start(self):
         self.start_time = time.time()
@@ -50,6 +51,6 @@ class TraceLogger:
     def log(self):
         get_trace_logger()\
             .info(f"{self.name}, cost: {self.gap}, from: {self.req.ip}, "
-                  f"args: {self.req.args}, data: {self.req.body}, "
+                  f"args: {self.req.args}, data: {self.doc}, "
                   f"agent: {self.req.headers}")
 
