@@ -111,7 +111,7 @@ class GzhService:
         else:
             self.user_ask[from_user][msg_id]["result"] = resp_text
             logger.info(f"从缓存取结果, msg_id={msg_id}, msg={msg}")
-            del self.user_ask[from_user][msg_id]
+            # del self.user_ask[from_user][msg_id]
             return xmltodict.unparse(resp_dict)
 
     @staticmethod
