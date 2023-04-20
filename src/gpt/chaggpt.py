@@ -13,7 +13,7 @@ async def ask_davinci(content, device_id):
         engine="text-davinci-003",
         prompt=content,
         temperature=0.7,
-        max_tokens=1000,
+        max_tokens=100,
         top_p=1.0,
         frequency_penalty=0.0,
         presence_penalty=0.0,
@@ -33,7 +33,7 @@ async def ask_gpt35_by_url(content, device_id):
         "model": "gpt-3.5-turbo",
         "messages": [{"role": "user", "content": content}],
         "user": device_id,
-        "max_token": 100
+        "max_tokens": 100
     }
     header = {
         'Authorization': 'Bearer ' + openai_api_key,
@@ -50,7 +50,7 @@ async def ask_gpt35_by_sdk(content, device_id):
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": content}],
         user=device_id,
-        max_token=100
+        max_tokens=100
     )
     resp_text = completion['choices'][0]["message"]["content"].strip()
     trace_logger.info(f"q: {content}\n{completion}")
