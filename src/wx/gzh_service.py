@@ -12,6 +12,7 @@ RESPONSE_TIMEOUT = "TIMEOUT"
 
 RESPONSE_TYPE_PUSH = "push"
 RESPONSE_TYPE_NO_PUSH = "no_push"
+MSG_TIMEOUT = "请求超时，请稍后再试。"
 logger = get_out_logger()
 
 
@@ -66,7 +67,7 @@ class GzhService:
             logger.info(f"从缓存取得请求结果, msg_id={msg_id}, resp={resp}")
             return RESPONSE_RESULT, resp, self.doc
         elif cache_curr_user_msg["count"] > 3:
-            return RESPONSE_TIMEOUT, "请求超时，请稍后再试。", None
+            return RESPONSE_TIMEOUT, MSG_TIMEOUT, None
         elif cache_curr_user_msg["count"] > 1:
             return RESPONSE_EMPTY, "", None
         else:
@@ -106,6 +107,7 @@ class GzhService:
             if response_type == RESPONSE_TYPE_PUSH:
                 await send_to_user(to_user, resp_text)
                 del self.user_ask[from_user][msg_id]
+            return xmltodict.unparse(resp_dict)
         else:
             self.user_ask[from_user][msg_id]["result"] = resp_text
             logger.info(f"从缓存取结果, msg_id={msg_id}, msg={msg}")
