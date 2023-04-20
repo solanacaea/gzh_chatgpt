@@ -2,12 +2,13 @@ from sanic import Blueprint
 from sanic.response import text
 from wx.gzh_service import GzhService
 from functools import wraps
-from utils.logger import TraceLogger
+from utils.logger import TraceLogger, get_trace_logger
 import xmltodict
 
 
 bp_gzh = Blueprint("gzh", url_prefix="gzh")
 file_name = "gzh"
+trace_logger = get_trace_logger()
 
 
 def trace_log(name):
@@ -31,6 +32,7 @@ user_ask = {}
 @bp_gzh.route('/wx', methods=["GET", "POST"])
 # @trace_log("wx")
 async def wechat(request):
+    trace_logger.info(f"user_ask={user_ask}")
     data = request.body.decode("utf-8")
     doc = xmltodict.parse(data)  # 解析xml数据
     caller_name = f"{file_name}-wechat"
