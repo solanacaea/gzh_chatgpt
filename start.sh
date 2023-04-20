@@ -3,6 +3,7 @@
 APP_NAME=GZHPY
 LOG_FOLDER=/root/logs/gzh
 source wxenv/bin/activate
+PORT=8000
 
 usage() {
 echo "Usage: sh start.sh [start|stop|restart|status]"
@@ -12,12 +13,17 @@ exit 1
 
 is_exist() {
 pid=`ps -ef | grep $APP_NAME | grep -v grep | awk '{print $2}' `
-
+pid2=`lsof -i:$PORT | grep -v PID | awk '{print $2}' `
 if [ -z "${pid}" ]
 then
  return 1
 else
- return 0
+ if [ -z "${pid2}" ]
+ then
+  return 1
+ else
+  return 0
+ fi
 fi
 }
 
@@ -26,7 +32,7 @@ start() {
 is_exist
 if [ $? -eq "0" ]
 then
- echo "${APP_NAME} is already running. pid=${pid} ."
+ echo "${APP_NAME} is already running. pid=${pid} and ${pid2} ."
 else
   echo "starting..."
   nohup python src/run.py --name $APP_NAME > $LOG_FOLDER/gzh.log 2>&1 &
@@ -42,6 +48,10 @@ then
  do
   kill -9 $single_pid
  done
+ for single_pid2 in $pid2
+ do
+  kill -9 $single_pid2
+ done
  cur_dateTime="`date +%Y-%m-%d,%H:%m:%s`"
  mv $LOG_FOLDER/gzh.log $LOG_FOLDER/gzh.log_$cur_dateTime
 else
@@ -54,7 +64,7 @@ status() {
    is_exist
 if [ $? -eq "0" ]
 then
-     echo "${APP_NAME} is running. Pid is ${pid}"
+     echo "${APP_NAME} is running. Pid is ${pid} and ${pid2}"
 else
      echo "${APP_NAME} is not running."
 fi
