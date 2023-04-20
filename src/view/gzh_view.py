@@ -32,9 +32,9 @@ user_ask = {}
 @bp_gzh.route('/wx', methods=["GET", "POST"])
 # @trace_log("wx")
 async def wechat(request):
-    trace_logger.info(f"user_ask={user_ask}")
     data = request.body.decode("utf-8")
     doc = xmltodict.parse(data)  # 解析xml数据
+    trace_logger.info(f"q={doc['xml']['Content']}, cache={user_ask}")
     caller_name = f"{file_name}-wechat"
     log = TraceLogger(caller_name, request, doc)
     log.start()
