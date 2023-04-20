@@ -3,3 +3,7 @@
 *.cpython-39.pyc
 venv
 .idea
+src/utils/cache.py
+src/view/test_view.py
+config/config.yml
+src/utils/cache.py
